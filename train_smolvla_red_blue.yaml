@@ -1,0 +1,52 @@
+policy:
+  type: smolvla
+  device: cuda
+  push_to_hub: true
+  repo_id: AmberHyunKIM/smolvla_red_blue_cube_sorting
+  freeze_vision_encoder: true
+  train_expert_only: false
+
+dataset:
+  repo_id: AmberHyunKIM/so101_red_blue_cube_sorting
+  image_transforms:
+    enable: true
+    tfs:
+      brightness:
+        weight: 1.0
+        type: ColorJitter
+        kwargs:
+          brightness: [0.8, 1.2]
+      contrast:
+        weight: 1.0
+        type: ColorJitter
+        kwargs:
+          contrast: [0.8, 1.2]
+      saturation:
+        weight: 0.0
+        type: ColorJitter
+        kwargs:
+          saturation: [0.5, 1.5]
+      hue:
+        weight: 0.0
+        type: ColorJitter
+        kwargs:
+          hue: [-0.05, 0.05]
+      sharpness:
+        weight: 1.0
+        type: SharpnessJitter
+        kwargs:
+          sharpness: [0.5, 1.5]
+      affine:
+        weight: 1.0
+        type: RandomAffine
+        kwargs:
+          degrees: [-5.0, 5.0]
+          translate: [0.05, 0.05]
+
+output_dir: outputs/train/smolvla_red_blue
+job_name: smolvla_red_blue
+batch_size: 32
+steps: 20000
+save_freq: 5000
+wandb:
+  enable: false

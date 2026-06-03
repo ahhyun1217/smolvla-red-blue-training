@@ -1,0 +1,5 @@
+outputs/
+lerobot/
+__pycache__/
+*.pyc
+*.log
