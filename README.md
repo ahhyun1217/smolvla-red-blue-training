@@ -6,13 +6,20 @@ SO101 로봇팔로 빨강/파랑 큐브를 색에 따라 분류하는 정책 학
 - task 문자열: `put the red cube in the left white box` · `put the blue cube in the right white box`
 - 장면 구성: 항상 **빨강2 + 파랑1**, 큐브 위치/좌우 매 에피소드 랜덤 (박스는 고정)
 
-## 현재 방향 (2026-06) — 단일색 ACT 2개
-처음엔 언어조건 **SmolVLA** 한 모델로 색을 프롬프트로 가르려 했으나, 적은 데이터로 **색 grounding이 약했음**(GR00T도 비슷). 그래서:
+## 실험 방향 및 이력
 
-- **색마다 ACT 모델 1개** (red ACT, blue ACT) + **모델 선택으로 명령 라우팅**
-- 명령(빨강/파랑)은 모델 *안의* 텍스트가 아니라 **어느 모델을 로드하느냐**로 매핑
-- ACT는 가볍고 CPU 추론도 빠름 → 노트북에서 SmolVLA가 멈추던 문제 해결
-- "한 모델 + 음성" VLA 버전은 옵션으로 남겨둠 ([`robot/GPU_TRAINING.md`](robot/GPU_TRAINING.md) §4)
+### Phase 1 — SmolVLA / GR00T (양방향 분류)
+언어조건 VLA 한 모델로 빨강·파랑을 동시에 프롬프트로 구분하는 방식 시도.
+- **SmolVLA**: 증강 유/무, freeze 유/무 조합으로 실험
+- **GR00T N1.5-3B**: projector + diffusion head만 파인튜닝 (LLM/vision 동결)
+- 결과: 적은 데이터(80 ep)에서 **색 grounding이 약해 단일 모델로 양방향 분류 성능 부족**
+
+### Phase 2 — SmolVLA 단일색 모델 (현재)
+색마다 별도 모델을 학습해 모델 선택으로 색 라우팅.
+- **red 모델**: `smolvla_red_only_frozen` — freeze=True, 60 ep → **성능 양호**
+- **blue 모델**: `smolvla_blue_only_frozen` — freeze=True, 70 ep (소수색 분류 난이도로 데이터 추가)
+- SmolVLA는 VLM 사전학습 덕에 색 개념 내재 → ACT 대비 색 구분 유리
+- 추론은 GPU/CPU 모두 가능 (노트북 배포 고려)
 
 ## 데이터셋 (HF, public)
 | repo | 에피소드 | 집는 색 |
@@ -82,15 +89,22 @@ ACT 두 모델(red/blue) 학습 절차는 [`robot/GPU_TRAINING.md`](robot/GPU_TR
 
 ### 실험 이력 — Config / Dataset / Model 매핑
 
-| Config | Dataset | Model (HF) |
-|--------|---------|------------|
-| `configs/smolvla/red_only_frozen.yaml` | [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) | [smolvla_red_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_frozen) |
-| `configs/smolvla/red_only_unfrozen.yaml` | [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) | [smolvla_red_only_unfrozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_unfrozen) |
-| `configs/smolvla/blue_only_frozen.yaml` | [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) | [smolvla_blue_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_blue_only_frozen) |
-| `configs/smolvla/red_blue.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) | [smolvla_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/smolvla_red_blue_cube_sorting) |
-| `configs/smolvla/red_blue_no_aug.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) | [smolvla_red_blue_no_aug](https://huggingface.co/AmberHyunKIM/smolvla_red_blue_no_aug) |
-| `configs/groot/red_blue.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) | [groot_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/groot_red_blue_cube_sorting) |
-| `configs/groot/red_blue_v2.yaml` | [so101_red_blue_v2](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_v2) | [groot_red_blue_v2](https://huggingface.co/AmberHyunKIM/groot_red_blue_v2) |
+#### SmolVLA 실험
+
+| 설명 | Config | 데이터셋 | 학습된 모델 |
+|------|--------|---------|------------|
+| 빨강 단독 — vision 동결 ✅ | `configs/smolvla/red_only_frozen.yaml` | [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) (60 ep) | [smolvla_red_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_frozen) |
+| 빨강 단독 — vision 언프리즈 | `configs/smolvla/red_only_unfrozen.yaml` | [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) (60 ep) | [smolvla_red_only_unfrozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_unfrozen) |
+| 파랑 단독 — vision 동결 (진행중) | `configs/smolvla/blue_only_frozen.yaml` | [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) (70 ep) | [smolvla_blue_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_blue_only_frozen) |
+| 양방향 분류 — 증강 있음 | `configs/smolvla/red_blue.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) | [smolvla_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/smolvla_red_blue_cube_sorting) |
+| 양방향 분류 — 증강 없음 | `configs/smolvla/red_blue_no_aug.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) | [smolvla_red_blue_no_aug](https://huggingface.co/AmberHyunKIM/smolvla_red_blue_no_aug) |
+
+#### GR00T N1.5 실험
+
+| 설명 | Config | 데이터셋 | 학습된 모델 |
+|------|--------|---------|------------|
+| 양방향 분류 v1 | `configs/groot/red_blue.yaml` | [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) | [groot_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/groot_red_blue_cube_sorting) |
+| 양방향 분류 v2 (10 epoch) | `configs/groot/red_blue_v2.yaml` | [so101_red_blue_v2](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_v2) (80 ep) | [groot_red_blue_v2](https://huggingface.co/AmberHyunKIM/groot_red_blue_v2) |
 
 ## 참고
 - 캘리브레이션 JSON은 **이 물리 로봇 개체 전용** (모터 영점값). 다른 로봇이면 새로 캘리.
