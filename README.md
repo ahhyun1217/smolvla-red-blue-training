@@ -96,7 +96,8 @@ ACT 두 모델(red/blue) 학습 절차는 [`robot/GPU_TRAINING.md`](robot/GPU_TR
 - 양방향 분류 + 증강 없음 — [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) → [smolvla_red_blue_no_aug](https://huggingface.co/AmberHyunKIM/smolvla_red_blue_no_aug) · `configs/smolvla/red_blue_no_aug.yaml`
 - 빨강 단독 + vision 동결 ✅ — [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) (60 ep) → [smolvla_red_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_frozen) · `configs/smolvla/red_only_frozen.yaml`
 - 빨강 단독 + vision 언프리즈 — [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) (60 ep) → [smolvla_red_only_unfrozen](https://huggingface.co/AmberHyunKIM/smolvla_red_only_unfrozen) · `configs/smolvla/red_only_unfrozen.yaml`
-- 파랑 단독 + vision 동결 — [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) (70 ep) → [smolvla_blue_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_blue_only_frozen) · `configs/smolvla/blue_only_frozen.yaml`
+- 파랑 단독 + vision 동결 (40 ep) ❌ 색 구분 실패 — [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) (40 ep) → [smolvla_blue_only](https://huggingface.co/AmberHyunKIM/smolvla_blue_only) · `configs/smolvla/blue_only_frozen_40ep.yaml`
+- 파랑 단독 + vision 동결 (70 ep) — [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) (70 ep) → [smolvla_blue_only_frozen](https://huggingface.co/AmberHyunKIM/smolvla_blue_only_frozen) · `configs/smolvla/blue_only_frozen.yaml`
 
 **GR00T N1.5**
 - 양방향 분류 v1 — [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) → [groot_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/groot_red_blue_cube_sorting) · `configs/groot/red_blue.yaml`

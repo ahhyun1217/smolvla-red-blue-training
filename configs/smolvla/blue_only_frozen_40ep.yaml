@@ -1,0 +1,22 @@
+policy:
+  type: smolvla
+  device: cuda
+  push_to_hub: true
+  repo_id: AmberHyunKIM/smolvla_blue_only
+  freeze_vision_encoder: true
+  train_expert_only: false
+  scheduler_decay_steps: 6700
+
+dataset:
+  repo_id: AmberHyunKIM/so101_blue_only  # 당시 40 ep (현재는 70 ep로 업데이트됨)
+  image_transforms:
+    enable: false
+
+output_dir: outputs/train/smolvla_blue_only
+job_name: smolvla_blue_only
+batch_size: 32
+steps: 6700  # 40 ep 에피소드 비례 (10000 * 40/60)
+save_freq: 1000
+wandb:
+  enable: false
+# 결과: 색 구분 실패 — 40 ep로 소수색(파랑) 분류 부족, 70 ep로 재수집 후 blue_only_frozen.yaml로 재학습
