@@ -22,14 +22,16 @@ SO101 로봇팔로 빨강/파랑 큐브를 색에 따라 분류하는 정책 학
 - 추론은 GPU/CPU 모두 가능 (노트북 배포 고려)
 
 ## 데이터셋 (HF, public)
-| repo | 에피소드 | 집는 색 |
-|---|---|---|
-| [`AmberHyunKIM/so101_red_only`](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only)   | 60 | 빨강 2개 → 왼쪽 흰 박스 |
-| [`AmberHyunKIM/so101_blue_only`](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) | 70 | 파랑 1개 → 오른쪽 흰 박스 |
+
+| 데이터셋 | 에피소드 | 프레임 | 태스크 | 비고 |
+|---------|---------|-------|-------|------|
+| [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) | 80 | 43,878 | 빨강·파랑 양방향 분류 | Phase 1 초기 데이터, 카메라 front/side |
+| [so101_red_blue_v2](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_v2) | 80 | 40,327 | 빨강·파랑 양방향 분류 | Phase 1 재수집, 카메라 wrist/top |
+| [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) | 60 | 30,106 | 빨강 2개 → 왼쪽 흰 박스 | Phase 2 단일색, **현재 사용** |
+| [so101_blue_only](https://huggingface.co/datasets/AmberHyunKIM/so101_blue_only) | 70 | 23,114 | 파랑 1개 → 오른쪽 흰 박스 | Phase 2 단일색, **현재 사용** |
 
 - 카메라: **wrist, top** (640×480, MJPG) — 손목캠 + 탑뷰
 - 색 판별 작업이라 학습 시 **hue/saturation 증강은 끔** (색 왜곡 방지)
-- (옛 데이터 `so101_red_blue_cube_sorting` 80ep, `so101_red_blue_v2`는 front/side·구 task 문자열 — 사용 안 함)
 
 ## 전체 워크플로우
 ```
