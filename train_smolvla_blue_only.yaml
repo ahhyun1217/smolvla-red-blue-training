@@ -1,0 +1,21 @@
+policy:
+  type: smolvla
+  device: cuda
+  push_to_hub: true
+  repo_id: AmberHyunKIM/smolvla_blue_only_frozen
+  freeze_vision_encoder: true
+  train_expert_only: false
+  scheduler_decay_steps: 7200
+
+dataset:
+  repo_id: AmberHyunKIM/so101_blue_only
+  image_transforms:
+    enable: false
+
+output_dir: outputs/train/smolvla_blue_only
+job_name: smolvla_blue_only
+batch_size: 32
+steps: 7200
+save_freq: 1000
+wandb:
+  enable: false

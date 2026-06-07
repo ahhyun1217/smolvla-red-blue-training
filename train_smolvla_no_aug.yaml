@@ -1,0 +1,20 @@
+policy:
+  type: smolvla
+  device: cuda
+  push_to_hub: true
+  repo_id: AmberHyunKIM/smolvla_red_blue_no_aug
+  freeze_vision_encoder: true
+  train_expert_only: false
+
+dataset:
+  repo_id: AmberHyunKIM/so101_red_blue_cube_sorting
+  image_transforms:
+    enable: false
+
+output_dir: outputs/train/smolvla_no_aug
+job_name: smolvla_no_aug
+batch_size: 32
+steps: 20000
+save_freq: 5000
+wandb:
+  enable: false
