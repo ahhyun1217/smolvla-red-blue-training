@@ -103,6 +103,9 @@ ACT 두 모델(red/blue) 학습 절차는 [`robot/GPU_TRAINING.md`](robot/GPU_TR
 - 양방향 분류 v1 — [so101_red_blue_cube_sorting](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_cube_sorting) (80 ep) → [groot_red_blue_cube_sorting](https://huggingface.co/AmberHyunKIM/groot_red_blue_cube_sorting) · `configs/groot/red_blue.yaml`
 - 양방향 분류 v2 — [so101_red_blue_v2](https://huggingface.co/datasets/AmberHyunKIM/so101_red_blue_v2) (80 ep) → [groot_red_blue_v2](https://huggingface.co/AmberHyunKIM/groot_red_blue_v2) · `configs/groot/red_blue_v2.yaml`
 
+**ACT**
+- 빨강 단독 (ACT 베이스라인) — [so101_red_only](https://huggingface.co/datasets/AmberHyunKIM/so101_red_only) (60 ep) → [act_so101_red_only](https://huggingface.co/AmberHyunKIM/act_so101_red_only) · `configs/act/red_only.yaml`
+
 ## 참고
 - 캘리브레이션 JSON은 **이 물리 로봇 개체 전용** (모터 영점값). 다른 로봇이면 새로 캘리.
 - GPU 학습 머신은 캘리 불필요 (로봇 연결 안 함).

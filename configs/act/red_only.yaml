@@ -1,0 +1,21 @@
+policy:
+  type: act
+  device: cuda
+  push_to_hub: true
+  repo_id: AmberHyunKIM/act_so101_red_only
+  # ACT 구조/optimizer 는 lerobot 기본 프리셋 그대로:
+  #   chunk_size=100, n_action_steps=100, vision_backbone=resnet18(ImageNet),
+  #   dim_model=512, n_heads=8, use_vae=true, kl_weight=10.0, lr=1e-5
+
+dataset:
+  repo_id: AmberHyunKIM/so101_red_only
+  image_transforms:
+    enable: false
+
+output_dir: outputs/train/act_red_only
+job_name: act_so101_red_only
+batch_size: 8
+steps: 100000
+save_freq: 20000
+wandb:
+  enable: false
