@@ -25,9 +25,9 @@ run_exp() {
 }
 
 # 실험 B: SmolVLA 증강 없음
-run_exp train_smolvla_no_aug.yaml smolvla_no_aug
+run_exp configs/smolvla/red_blue_no_aug.yaml smolvla_no_aug
 
 # 실험 C: GR00T 최소 증강 (brightness/contrast만)
-run_exp train_groot_red_blue.yaml groot_red_blue
+run_exp configs/groot/red_blue.yaml groot_red_blue
 
 echo "모든 실험 완료"
