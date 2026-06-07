@@ -5,11 +5,13 @@
 # 사용법:
 #   hf auth login        # 처음 1회 (토큰 입력)
 #   export HF_USER=<your_hf_username>
+#   export DATASET=<repo이름>   # 선택: 기본 so101_red_blue_cube_sorting
 #   bash push_dataset.sh
 set -euo pipefail
 
 : "${HF_USER:?먼저 실행하세요:  export HF_USER=<your_hf_username>}"
-REPO_ID="$HF_USER/so101_red_blue_cube_sorting"
+DATASET="${DATASET:-so101_red_blue_cube_sorting}"
+REPO_ID="$HF_USER/$DATASET"
 
 python - <<PY
 from lerobot.datasets.lerobot_dataset import LeRobotDataset

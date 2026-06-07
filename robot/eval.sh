@@ -12,7 +12,7 @@
 #
 # 환경변수로 덮어쓰기 가능:
 #   HF_USER (기본 AmberHyunKIM), DEVICE (기본 자동: GPU 있으면 cuda, 없으면 cpu)
-#   FRONT_CAM/SIDE_CAM (카메라 노드), ROBOT_PORT (로봇 시리얼 포트)
+#   WRIST_CAM/TOP_CAM (카메라 노드), ROBOT_PORT (로봇 시리얼 포트)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -25,8 +25,8 @@ CALIB_DIR="$SCRIPT_DIR/calibration/robots/so101_follower"
 
 # 로봇/카메라 (PC가 바뀌면 환경변수로 덮어쓰기)
 ROBOT_PORT="${ROBOT_PORT:-/dev/serial/by-id/usb-1a86_USB_Single_Serial_5AE6085270-if00}"
-FRONT_CAM="${FRONT_CAM:-/dev/video33}"
-SIDE_CAM="${SIDE_CAM:-/dev/video35}"
+WRIST_CAM="${WRIST_CAM:-/dev/video33}"   # 손목 시점
+TOP_CAM="${TOP_CAM:-/dev/video35}"       # 탑뷰
 DEVICE="${DEVICE:-}"   # 비우면 정책 설정(cuda) → 없으면 자동 cpu 폴백
 
 TASK="${1:?task 문자열이 필요합니다 (예: \"put the red cube in the left box\")}"
@@ -48,7 +48,7 @@ lerobot-record \
   --robot.port="$ROBOT_PORT" \
   --robot.id=my_follower \
   --robot.calibration_dir="$CALIB_DIR" \
-  --robot.cameras="{ front: {type: opencv, index_or_path: $FRONT_CAM, width: 640, height: 480, fps: 30, fourcc: MJPG}, side: {type: opencv, index_or_path: $SIDE_CAM, width: 640, height: 480, fps: 30, fourcc: MJPG} }" \
+  --robot.cameras="{ wrist: {type: opencv, index_or_path: $WRIST_CAM, width: 640, height: 480, fps: 30, fourcc: MJPG}, top: {type: opencv, index_or_path: $TOP_CAM, width: 640, height: 480, fps: 30, fourcc: MJPG} }" \
   --policy.path="$POLICY" \
   "${DEVICE_ARG[@]}" \
   --dataset.repo_id="$HF_USER/eval_smolvla_red_blue" \
